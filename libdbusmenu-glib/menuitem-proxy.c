@@ -90,8 +90,8 @@ dbusmenu_menuitem_proxy_class_init (DbusmenuMenuitemProxyClass *klass)
 static void
 dbusmenu_menuitem_proxy_init (DbusmenuMenuitemProxy *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_MENUITEM_PROXY, DbusmenuMenuitemProxyPrivate);
-
+	//self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_MENUITEM_PROXY, DbusmenuMenuitemProxyPrivate);
+	self->priv = dbusmenu_menuitem_proxy_get_instance_private(self);
 	DbusmenuMenuitemProxyPrivate * priv = DBUSMENU_MENUITEM_PROXY_GET_PRIVATE(self);
 
 	priv->mi = NULL;

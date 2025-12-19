@@ -96,7 +96,8 @@ DbusmenuClientMenuitem *
 dbusmenu_client_menuitem_new (gint id, DbusmenuClient * client)
 {
 	DbusmenuClientMenuitem * mi = g_object_new(DBUSMENU_TYPE_CLIENT_MENUITEM, "id", id, NULL);
-	DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	//DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(mi);
 	priv->client = client;
 	return mi;
 }
@@ -105,7 +106,8 @@ dbusmenu_client_menuitem_new (gint id, DbusmenuClient * client)
 static void
 handle_event (DbusmenuMenuitem * mi, const gchar * name, GVariant * variant, guint timestamp)
 {
-	DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	//DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(mi);
 	dbusmenu_client_send_event(priv->client, dbusmenu_menuitem_get_id(mi), name, variant, timestamp, mi);
 	return;
 }
@@ -134,7 +136,8 @@ about_to_show_cb (gpointer user_data)
 static void
 send_about_to_show (DbusmenuMenuitem * mi, void (*cb) (DbusmenuMenuitem * mi, gpointer user_data), gpointer cb_data)
 {
-	DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	//DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
+	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(mi);
 	if (cb == NULL) {
 		/* Common enough that we don't want to bother
 		   with the allocation */

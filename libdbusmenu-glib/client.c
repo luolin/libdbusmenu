@@ -357,7 +357,8 @@ dbusmenu_client_class_init (DbusmenuClientClass *klass)
 static void
 dbusmenu_client_init (DbusmenuClient *self)
 {
-	self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_CLIENT, DbusmenuClientPrivate);
+	//self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_CLIENT, DbusmenuClientPrivate);
+	self->priv = dbusmenu_client_get_instance_private(self);
 
 	DbusmenuClientPrivate * priv = DBUSMENU_CLIENT_GET_PRIVATE(self);
 
