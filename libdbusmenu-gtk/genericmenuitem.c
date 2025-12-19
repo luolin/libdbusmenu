@@ -108,7 +108,7 @@ genericmenuitem_class_init (GenericmenuitemClass *klass)
 static void
 genericmenuitem_init (Genericmenuitem *self)
 {
-	self->priv = GENERICMENUITEM_GET_PRIVATE(self);
+	genericmenuitem_get_instance_private(self);
 
 	self->priv->check_type = GENERICMENUITEM_CHECK_TYPE_NONE;
 	self->priv->state = GENERICMENUITEM_STATE_UNCHECKED;
