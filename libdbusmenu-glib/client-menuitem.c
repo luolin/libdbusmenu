@@ -32,6 +32,11 @@ License version 3 and version 2.1 along with this program.  If not, see
 #include "client-menuitem.h"
 #include "client-private.h"
 
+#ifndef DBUSMENU_CLIENT_MENUITEM
+#define DBUSMENU_CLIENT_MENUITEM(obj) \
+    (G_TYPE_CHECK_INSTANCE_CAST ((obj), DBUSMENU_TYPE_CLIENT_MENUITEM, DbusmenuClientMenuitem))
+#endif
+
 typedef struct _DbusmenuClientMenuitemPrivate DbusmenuClientMenuitemPrivate;
 
 struct _DbusmenuClientMenuitemPrivate
@@ -107,7 +112,8 @@ static void
 handle_event (DbusmenuMenuitem * mi, const gchar * name, GVariant * variant, guint timestamp)
 {
 	//DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
-	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(mi);
+	DbusmenuClientMenuitem *client_menuitem = DBUSMENU_CLIENT_MENUITEM(mi);
+	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(client_menuitem);
 	dbusmenu_client_send_event(priv->client, dbusmenu_menuitem_get_id(mi), name, variant, timestamp, mi);
 	return;
 }
@@ -137,7 +143,8 @@ static void
 send_about_to_show (DbusmenuMenuitem * mi, void (*cb) (DbusmenuMenuitem * mi, gpointer user_data), gpointer cb_data)
 {
 	//DbusmenuClientMenuitemPrivate * priv = DBUSMENU_CLIENT_MENUITEM_GET_PRIVATE(mi);
-	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(mi);
+	DbusmenuClientMenuitem *client_menuitem = DBUSMENU_CLIENT_MENUITEM(mi);
+	DbusmenuClientMenuitemPrivate *priv = dbusmenu_client_menuitem_get_instance_private(client_menuitem);
 	if (cb == NULL) {
 		/* Common enough that we don't want to bother
 		   with the allocation */
