@@ -381,7 +381,7 @@ dbusmenu_server_class_init (DbusmenuServerClass *class)
 static void
 dbusmenu_server_init (DbusmenuServer *self)
 {
-	self->priv = (DbusmenuServerPrivate*) g_type_instance_get_private ((GTypeInstance*) (self), (DBUSMENU_TYPE_SERVER));
+	self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_SERVER, DbusmenuServerPrivate);
 
 	DbusmenuServerPrivate * priv = DBUSMENU_SERVER_GET_PRIVATE(self);
 
@@ -900,16 +900,6 @@ layout_update_idle (gpointer user_data)
 	return FALSE;
 }
 
-static guint
-execInThreadDefaultCtx(GSourceFunc func, gpointer data) {
-	GMainContext *context = g_main_context_get_thread_default();
-	GSource *source = g_timeout_source_new(0);
-	g_source_set_callback(source, func, data, NULL);
-	guint result = g_source_attach(source, context);
-	g_source_unref(source);
-    return result;
-}
-
 /* Signals that the layout has been updated */
 static void
 layout_update_signal (DbusmenuServer * server)
@@ -918,7 +908,7 @@ layout_update_signal (DbusmenuServer * server)
 	priv->layout_revision++;
 
 	if (priv->layout_idle == 0) {
-		priv->layout_idle = execInThreadDefaultCtx(layout_update_idle, server);
+		priv->layout_idle = g_idle_add(layout_update_idle, server);
 	}
 
 	return;
@@ -1205,7 +1195,7 @@ menuitem_property_changed (DbusmenuMenuitem * mi, gchar * property, GVariant * v
 	/* Check to see if the idle is already queued, and queue it
 	   if not. */
 	if (priv->property_idle == 0) {
-		priv->property_idle = execInThreadDefaultCtx(menuitem_property_idle, server);
+		priv->property_idle = g_idle_add(menuitem_property_idle, server);
 	}
 
 	return;
@@ -1687,7 +1677,7 @@ bus_event_core (DbusmenuServer * server, gint32 id, gchar * event_type, GVariant
 	event_data->timestamp = timestamp;
 	event_data->variant = g_variant_ref(data);
 
-    execInThreadDefaultCtx(event_local_handler, event_data);
+	g_timeout_add(0, event_local_handler, event_data);
 
 	return TRUE;
 }
@@ -1832,7 +1822,7 @@ bus_about_to_show (DbusmenuServer * server, GVariant * params, GDBusMethodInvoca
 		return;
 	}
 
-	execInThreadDefaultCtx(bus_about_to_show_idle, g_object_ref(mi));
+	g_timeout_add(0, bus_about_to_show_idle, g_object_ref(mi));
 
 	/* GTK+ does not support about-to-show concept for now */
 	g_dbus_method_invocation_return_value(invocation,
@@ -1867,7 +1857,7 @@ bus_about_to_show_group (DbusmenuServer * server, GVariant * params, GDBusMethod
 	while (g_variant_iter_loop(&iter, "i", &id)) {
 		DbusmenuMenuitem * mi = lookup_menuitem_by_id(server, id);
 		if (mi != NULL) {
-			execInThreadDefaultCtx(bus_about_to_show_idle, g_object_ref(mi));
+			g_timeout_add(0, bus_about_to_show_idle, g_object_ref(mi));
 			gotone = TRUE;
 		} else {
 			g_variant_builder_add_value(&builder, g_variant_new_int32(id));

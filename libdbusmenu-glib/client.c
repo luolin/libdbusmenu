@@ -357,7 +357,7 @@ dbusmenu_client_class_init (DbusmenuClientClass *klass)
 static void
 dbusmenu_client_init (DbusmenuClient *self)
 {
-	self->priv = (DbusmenuClientPrivate*) g_type_instance_get_private ((GTypeInstance*) (self), (DBUSMENU_TYPE_CLIENT));
+	self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_CLIENT, DbusmenuClientPrivate);
 
 	DbusmenuClientPrivate * priv = DBUSMENU_CLIENT_GET_PRIVATE(self);
 
@@ -2511,7 +2511,7 @@ dbusmenu_client_get_root (DbusmenuClient * client)
 	DbusmenuClientPrivate * priv = DBUSMENU_CLIENT_GET_PRIVATE(client);
 
 	#ifdef MASSIVEDEBUGGING
-	g_debug("Client get root: %X", (guint)priv->root);
+	g_debug("Client get root: %p", priv->root);
 	#endif
 
 	return priv->root;

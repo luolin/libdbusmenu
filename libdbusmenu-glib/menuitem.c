@@ -323,7 +323,7 @@ _g_variant_unref (gpointer data)
 static void
 dbusmenu_menuitem_init (DbusmenuMenuitem *self)
 {
-	self->priv = (DbusmenuMenuitemPrivate*) g_type_instance_get_private ((GTypeInstance*) (self), (DBUSMENU_TYPE_MENUITEM));
+	self->priv = G_TYPE_INSTANCE_GET_PRIVATE ((self), DBUSMENU_TYPE_MENUITEM, DbusmenuMenuitemPrivate);
 
 	DbusmenuMenuitemPrivate * priv = DBUSMENU_MENUITEM_GET_PRIVATE(self);
 
